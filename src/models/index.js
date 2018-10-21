@@ -39,7 +39,7 @@ export default async () => {
 
     const models = {
         user: sequelize.import('./User'),
-        //account: sequelize.import('./Account')
+        account: sequelize.import('./Account')
     };
 
     Object.keys(models).forEach((modelName) => {

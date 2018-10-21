@@ -48,21 +48,5 @@ export default function (sequelize, DataTypes) {
             },
         },
     });
-
-    /** User.associate = (models) => {
-        User.belongsToMany(models.account, {
-            through: models.member,
-            foreignKey: {
-                name: 'userId',
-                field: 'userId',
-            },
-        });
-
-        User.belongsToMany(models.role, {
-            through: 'roleUsers',
-            foreignKey: 'userId',
-        });
-    };*/
-
     return User;
 }

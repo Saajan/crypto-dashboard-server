@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
-const SECRET = process.env.SECRET;
+import jwt from 'jsonwebtoken';
 import express from 'express';
+const SECRET = process.env.SECRET;
 var router = express.Router();
 import getModels from '../models';
 import {
@@ -61,6 +62,18 @@ router.post('/signup', async (req, res) => {
 });
 
 router.post('/signin', function (req, res) {
+  let {
+    username,
+    password
+  } = req.body;
+
+  if (!username || !password) {
+    res.json({
+      success: false,
+      msg: 'Please enter username and password.'
+    });
+  }
+
   const responsePromise = getModels().then(async (models) => {
     const user = await models.user.findOne({
       where: {
@@ -77,6 +90,8 @@ router.post('/signin', function (req, res) {
       };
     }
 
+    console.log(user);
+
     const valid = await bcrypt.compare(password, user.password);
 
     if (!valid) {
@@ -87,9 +102,13 @@ router.post('/signin', function (req, res) {
       };
     }
 
-    const token = user.password + SECRET;
+    console.log(valid);
 
-    const account = await models.accounts.findOne({
+    const token = jwt.sign({ id: user.id }, SECRET, {
+      expiresIn: 86400 // expires in 24 hours
+    });
+
+    const account = await models.account.findOne({
       where: {
         userid: user.id,
       },
@@ -100,7 +119,9 @@ router.post('/signin', function (req, res) {
       return {
         success: true,
         account,
-        user,
+        user:{
+          username : user.username
+        },
         token
       }
     }
