@@ -4,8 +4,10 @@ import express from 'express';
 const SECRET = process.env.SECRET;
 var router = express.Router();
 import getModels from '../models';
+
 import {
-  getToken
+  getToken,
+  eachApiCall
 } from '../utils/helpers';
 var User = require("../models/User");
 
@@ -104,7 +106,9 @@ router.post('/signin', function (req, res) {
 
     console.log(valid);
 
-    const token = jwt.sign({ id: user.id }, SECRET, {
+    const token = jwt.sign({
+      id: user.id
+    }, SECRET, {
       expiresIn: 86400 // expires in 24 hours
     });
 
@@ -118,9 +122,9 @@ router.post('/signin', function (req, res) {
     if (valid) {
       return {
         success: true,
-        account,
-        user:{
-          username : user.username
+        status: account.status,
+        user: {
+          username: user.username
         },
         token
       }
@@ -133,8 +137,18 @@ router.post('/signin', function (req, res) {
 });
 
 
-router.get('/crypto', function () {
-  //https://api.coindesk.com/v1/bpi/historical/close.json?start=2013-09-01&end=2013-09-05
+router.get('/getCurrentPrice', async (req, res) => {
+
+  let currencyList = ['BTC-USD', 'LTC-USD', 'ETC-USD', 'ETH-USD', 'BCH-USD'];
+
+  const promises = await currencyList.map((p) => {
+    return eachApiCall(p);
+  });
+
+  Promise.all(promises).then(function (response) {
+    res.json(response);
+  });
+  //https: //api.coinbase.com/v2/prices/BTC-USD/buy
 })
 
 module.exports = router;
