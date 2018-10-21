@@ -1,0 +1,17 @@
+{
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "9.2"
+          }
+        }
+      ]
+    ],
+    "plugins": ["transform-object-rest-spread"],
+    "ignore": [
+      "src/public/**/*.js"
+    ]
+  }
+  
