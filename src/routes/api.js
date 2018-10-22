@@ -50,6 +50,13 @@ router.post('/signup', async (req, res) => {
       });
 
       if (user) {
+
+        const account = await models.account.create({
+          userId:user.id,
+        }, {
+          raw: true
+        });
+
         return {
           success: true,
           msg: "User registration successful."
@@ -63,7 +70,7 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-router.post('/signin', function (req, res) {
+router.post('/signin', async (req, res) => {
   let {
     username,
     password
@@ -112,20 +119,9 @@ router.post('/signin', function (req, res) {
       expiresIn: 86400 // expires in 24 hours
     });
 
-    const account = await models.account.findOne({
-      where: {
-        userid: user.id,
-      },
-      raw: true,
-    });
-
     if (valid) {
       return {
         success: true,
-        status: account.status,
-        user: {
-          username: user.username
-        },
         token
       }
     }
@@ -136,8 +132,53 @@ router.post('/signin', function (req, res) {
   });
 });
 
+router.post('/getAccount', async (req, res) => {
+  const responsePromise = getModels().then(async (models) => {
 
-router.get('/getCurrentPrice', async (req, res) => {
+    console.log(req.body);
+
+    let {
+      userid,
+    } = req.body;
+
+    if (!userid) {
+      res.json({
+        success: false,
+        msg: 'Account id missing'
+      });
+    }
+
+    const account = await models.account.findOne({
+      where: {
+        userid
+      },
+      raw: true,
+    });
+
+    if (account) {
+      return {
+        success: true,
+        account
+      }
+    } else {
+      return {
+        success: false,
+        msg: "Account Missing"
+      }
+    }
+
+  });
+
+  responsePromise.then(data => {
+    res.json(data);
+  }).catch(e=>{
+    console.log(e);
+  });
+
+})
+
+
+router.post('/getCurrentPrice', async (req, res) => {
 
   let currencyList = ['BTC-USD', 'LTC-USD', 'ETC-USD', 'ETH-USD', 'BCH-USD'];
 

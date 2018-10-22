@@ -1,7 +1,7 @@
 import rp from 'request-promise';
 
 
-export const getToken = function (headers) {
+export const getToken = (headers) => {
     if (headers && headers.authorization) {
         var parted = headers.authorization.split(' ');
         if (parted.length === 2) {
@@ -15,7 +15,7 @@ export const getToken = function (headers) {
 };
 
 
-export const eachApiCall = function (coinPair) {
+export const eachApiCall = (coinPair) => {
     return rp({
         url: `https://api.coinbase.com/v2/prices/${coinPair}/buy`,
         json: true
