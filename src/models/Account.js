@@ -4,10 +4,6 @@ export default function (sequelize, DataTypes) {
             type: DataTypes.UUID,
             primaryKey: true
         },
-        status:{
-            type: DataTypes.UUID,
-            defaultValue: true
-        },
         BTC: {
             type: DataTypes.REAL,
             defaultValue: 0
@@ -28,6 +24,8 @@ export default function (sequelize, DataTypes) {
             type: DataTypes.REAL,
             defaultValue: 0
         },
+    },{
+        timestamps: false,
     });
     return Account;
 }

@@ -52,7 +52,7 @@ router.post('/signup', async (req, res) => {
       if (user) {
 
         const account = await models.account.create({
-          userId:user.id,
+          userId: user.id,
         }, {
           raw: true
         });
@@ -122,6 +122,7 @@ router.post('/signin', async (req, res) => {
     if (valid) {
       return {
         success: true,
+        username: user.username,
         token
       }
     }
@@ -171,7 +172,7 @@ router.post('/getAccount', async (req, res) => {
 
   responsePromise.then(data => {
     res.json(data);
-  }).catch(e=>{
+  }).catch(e => {
     console.log(e);
   });
 
