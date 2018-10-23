@@ -1,9 +1,9 @@
 
 
-Before run this example, make sure you have installed and running MongoDB.
+Before run this example, make sure you have installed and running MySQL.
 
 Step to run locally:
 
 * Clone this repo
-* Run 'npm install'
-* Run 'npm start'
+* Run 'yarn'
+* Run 'yarn start'
